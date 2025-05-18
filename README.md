@@ -13,13 +13,26 @@ first and only argument.
 ## 📖 Documentation
 Right now, there isn't a lot, but watch as it grows!
 
-### Data types
-Currently, Cherry has no variables. However, here are some data types to use with functions.
-<br />
+### Variables && Data types
+Variables can be assigned with either the `dec` or `decm` keyword.
+<br/>
+`dec` - Short for 'declare', is not muttable
+<br/>
+`decm` - Short for 'declare muttable', is muttable
+<br/>
 
 - **String** - `"Hello, world!"`
 - **Float** - `12.5`
 - **Integer** - `7`
+<br/>
+
+Example:
+```
+dec name = "William"
+decm age = 19
+
+age = 21
+```
 
 ### Built-in functions
 Cherry comes with some built-in functions that can be identifed by ending in `!` much like you'd see
