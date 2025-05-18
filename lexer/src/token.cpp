@@ -27,6 +27,15 @@ namespace lexer {
             case STRING_LITERAL: str = "STRING_LITERAL"; break;
             case NUMBER: str = "NUMBER"; break;
             case LINE_END: str = "LINE_END"; break;
+            case ADD: str = "ADD"; break;
+            case SUBTRACT: str = "SUBTRACT"; break;
+            case MULTIPLY: str = "MULTIPLY"; break;
+            case DIVIDE: str = "DIVIDE"; break;
+            case LEFT_PAREN: str = "LEFT_PAREN"; break;
+            case RIGHT_PAREN: str = "RIGHT_PAREN"; break;
+            case EQUALS: str = "EQUALS"; break;
+            case IDENTIFIER: str = "IDENTIFIER"; break;
+            case KEYWORD: str = "KEYWORD"; break;
             default:
                 assert(false && "Can't find str match for token enum.");
         }

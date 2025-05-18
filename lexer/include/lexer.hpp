@@ -20,7 +20,10 @@ namespace lexer {
         char peek();
         char consume();
 
+        bool match_symbol(std::vector<Token>& tokens);
         bool match_builtin_func(std::vector<Token>& tokens);
+        bool match_keyword(std::vector<Token>& tokens);
+        bool match_identifier(std::vector<Token>& tokens);
         bool match_string_literal(std::vector<Token>& tokens);
         bool match_number(std::vector<Token>& tokens);
 

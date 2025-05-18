@@ -19,6 +19,7 @@ namespace parser {
     void BuiltInFunc::print(std::ostream& os, int indent_level) const {
         indent(os, indent_level);
         os << "BuiltInFunc: " << func_name << "\n";
+
         if (arg) {
             arg->print(os, indent_level + 1);
         }
@@ -49,6 +50,69 @@ namespace parser {
     void Float::print(std::ostream& os, int indent_level) const {
         indent(os, indent_level);
         os << "Float: " << value << "\n";
+    }
+
+    Identifier::Identifier(const std::string& name) {
+        this->name = name;
+    }
+
+    void Identifier::print(std::ostream& os, int indent_level) const {
+        indent(os, indent_level);
+        os << "Identifier: " << name << "\n";
+    }
+
+    ImmDeclare::ImmDeclare(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value) {
+        this->identifier = std::move(identifier);
+        this->value = std::move(value);
+    }
+
+    void ImmDeclare::print(std::ostream& os, int indent_level) const {
+        indent(os, indent_level);
+        os << "ImmDeclare:\n";
+
+        if (identifier) {
+            identifier->print(os, indent_level + 1);
+        }
+
+        if (value) {
+            value->print(os, indent_level + 1);
+        }
+    }
+
+    MutDeclare::MutDeclare(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value) {
+        this->identifier = std::move(identifier);
+        this->value = std::move(value);
+    }
+
+    void MutDeclare::print(std::ostream& os, int indent_level) const {
+        indent(os, indent_level);
+        os << "MutDeclare:\n";
+
+        if (identifier) {
+            identifier->print(os, indent_level + 1);
+        }
+
+        if (value) {
+            value->print(os, indent_level + 1);
+        }
+    }
+
+    AssignVar::AssignVar(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value) {
+        this->identifier = std::move(identifier);
+        this->value = std::move(value);
+    }
+
+    void AssignVar::print(std::ostream& os, int indent_level) const {
+        indent(os, indent_level);
+        os << "AssignVar:\n";
+
+        if (identifier) {
+            identifier->print(os, indent_level + 1);
+        }
+
+        if (value) {
+            value->print(os, indent_level + 1);
+        }
     }
 
 }

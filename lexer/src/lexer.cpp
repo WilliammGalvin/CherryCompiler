@@ -38,6 +38,30 @@ namespace lexer {
         return c;
     }
 
+    bool Lexer::match_symbol(std::vector<Token>& tokens) {
+        const std::vector<std::pair<char, TokenType>> symbol_map = {
+            { '+', ADD },
+            { '-', SUBTRACT },
+            { '*', MULTIPLY },
+            { '/', DIVIDE },
+            { '(', LEFT_PAREN },
+            { ')', RIGHT_PAREN },
+            { '=', EQUALS },
+        };
+
+        for (const auto& [key, value] : symbol_map) {
+            if (current_source[0] == key) {
+                tokens.emplace_back(value);
+                current_source = current_source.substr(1);
+                index++;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     bool Lexer::match_builtin_func(std::vector<Token>& tokens) {
         std::smatch match{};
         const std::regex reg(R"([a-zA-Z_][a-zA-Z0-9_]*!)");
@@ -55,6 +79,48 @@ namespace lexer {
 
             index += static_cast<int>(m_str.length());
             current_source = current_source.substr(m_str.length());
+            return true;
+        }
+
+        return false;
+    }
+
+     bool Lexer::match_keyword(std::vector<Token>& tokens) {
+        std::smatch match;
+
+        const std::vector<std::regex> keywords = {
+            std::regex("decm"),
+            std::regex("dec"),
+        };
+
+        for (const auto& keyword : keywords) {
+            if (
+                std::regex_search(current_source, match, keyword) &&
+                match.position() == 0
+            ) {
+                const std::string& str = match.str(0);
+                tokens.emplace_back(KEYWORD, str);
+                current_source = current_source.substr(str.length());
+                index += static_cast<int>(str.length());
+                return true;
+            }
+        }
+
+        return false;
+     }
+
+    bool Lexer::match_identifier(std::vector<Token>& tokens) {
+        std::smatch match;
+        const std::regex reg(R"([a-zA-Z_][a-zA-Z0-9_]*)");
+
+        if (
+            std::regex_search(current_source, match, reg) &&
+            match.position() == 0
+        ) {
+            const std::string& name = match.str(0);
+            tokens.emplace_back(IDENTIFIER, name);
+            current_source = current_source.substr(name.length());
+            index += static_cast<int>(name.length());
             return true;
         }
 
@@ -120,8 +186,11 @@ namespace lexer {
                 continue;
             }
 
+            if (match_symbol(tokens)) continue;
             if (match_builtin_func(tokens)) continue;
+            if (match_keyword(tokens)) continue;
             if (match_string_literal(tokens)) continue;
+            if (match_identifier(tokens)) continue;
             if (match_number(tokens)) continue;
 
             throw LexError("Unable to identify token from source:\n" + current_source, line, index);

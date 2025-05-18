@@ -12,7 +12,16 @@ namespace lexer {
         BUILTIN_FUNC,
         LINE_END,
         STRING_LITERAL,
-        NUMBER
+        NUMBER,
+        ADD,
+        SUBTRACT,
+        MULTIPLY,
+        DIVIDE,
+        LEFT_PAREN,
+        RIGHT_PAREN,
+        EQUALS,
+        IDENTIFIER,
+        KEYWORD
     };
 
     struct Token {

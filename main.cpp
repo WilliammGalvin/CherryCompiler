@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 
 #include "codegen/include/code_gen_error.hpp"
@@ -36,7 +37,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "~~~~~~" << std::endl;
 
-    std::vector<parser::ASTNode*> asts = parser::build_asts_from_tokens(tokens);
+    auto asts = parser::build_program(tokens);
 
     for (const auto& ast : asts) {
         ast->print(std::cout, 0);
@@ -47,12 +48,19 @@ int main(int argc, char* argv[]) {
     codegen::CGen gen;
 
     try {
-        gen.generate(asts, std::cout);
+        std::ofstream file("output/test.c");
+        if (!file.is_open()) {
+            std::cerr << "Failed to open output file." << std::endl;
+            return 1;
+        }
+
+        gen.generate(asts, file);
     } catch (const codegen::CodeGenError& err) {
         std::cerr << err.what() << std::endl;
         return 1;
     }
 
+    std::cout << "File compiled." << std::endl;
     asts.clear();
     return 0;
 }

@@ -44,6 +44,37 @@ namespace parser {
         void print(std::ostream& os, int indent_level) const override;
     };
 
+    struct Identifier : ASTNode {
+        std::string name;
+
+        Identifier(const std::string& name);
+        void print(std::ostream& os, int indent_level) const override;
+    };
+
+    struct ImmDeclare : ASTNode {
+        std::unique_ptr<ASTNode> identifier;
+        std::unique_ptr<ASTNode> value;
+
+        ImmDeclare(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value);
+        void print(std::ostream& os, int indent_level) const override;
+    };
+
+    struct MutDeclare : ASTNode {
+        std::unique_ptr<ASTNode> identifier;
+        std::unique_ptr<ASTNode> value;
+
+        MutDeclare(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value);
+        void print(std::ostream& os, int indent_level) const override;
+    };
+
+    struct AssignVar : ASTNode {
+        std::unique_ptr<ASTNode> identifier;
+        std::unique_ptr<ASTNode> value;
+
+        AssignVar(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value);
+        void print(std::ostream& os, int indent_level) const override;
+    };
+
 }
 
 #endif //AST_NODES_HPP

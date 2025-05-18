@@ -12,9 +12,19 @@
 namespace parser {
 
     std::unique_ptr<ASTNode> build_number(const std::vector<lexer::Token>& tokens, size_t* index);
-    ASTNode* build_expr(const std::vector<lexer::Token>& tokens, size_t* index);
+    std::unique_ptr<ASTNode> build_string_literal(const std::vector<lexer::Token>& tokens, size_t* index);
+    std::unique_ptr<ASTNode> build_identifier(const std::vector<lexer::Token>& tokens, size_t* index);
 
-    std::vector<ASTNode*> build_asts_from_tokens(const std::vector<lexer::Token>& tokens);
+    std::unique_ptr<ASTNode> build_value(const std::vector<lexer::Token>& tokens, size_t* index);
+
+    std::unique_ptr<ASTNode> build_imm_declare(const std::vector<lexer::Token>& tokens, size_t* index);
+    std::unique_ptr<ASTNode> build_mut_declare(const std::vector<lexer::Token>& tokens, size_t* index);
+    std::unique_ptr<ASTNode> build_assign_var(const std::vector<lexer::Token>& tokens, size_t* index);
+    std::unique_ptr<ASTNode> build_builtin_func_call(const std::vector<lexer::Token>& tokens, size_t* index);
+
+    std::unique_ptr<ASTNode> build_statement(const std::vector<lexer::Token>& tokens, size_t* index);
+
+    std::vector<std::unique_ptr<ASTNode>> build_program(const std::vector<lexer::Token>& tokens);
 
 }
 
