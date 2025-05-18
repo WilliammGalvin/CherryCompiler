@@ -1,5 +1,5 @@
 # 🍒 Cherry Compiler
-Cherry is a programming language that I am developing. It's still in the EARLY EARLY stages but it
+Cherry is a programming language that I'm developing. It's still in the EARLY EARLY stages but it
 plans to be a quick automation language.
 <br />
 <br />
