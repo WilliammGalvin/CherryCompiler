@@ -3,6 +3,8 @@
 
 #include "codegen/include/code_gen_error.hpp"
 #include "codegen/include/c_gen.hpp"
+#include "compiler/include/compiler.hpp"
+#include "compiler/include/compiler_error.hpp"
 #include "lexer/include/lexer.hpp"
 #include "lexer/include/lex_error.hpp"
 #include "parser/include/parser.hpp"
@@ -60,7 +62,19 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << "File compiled." << std::endl;
+    std::cout << "File transpiled to c." << std::endl;
     asts.clear();
+
+    compiler::Compiler compiler("output/test.c");
+
+    try {
+        compiler.compile();
+    } catch (const compiler::CompilerError& err) {
+        std::cerr << err.what() << std::endl;
+        return 1;
+    }
+
+    compiler.remove_temp_c_file();
+
     return 0;
 }
