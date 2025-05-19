@@ -3,12 +3,42 @@
 //
 
 #include "../include/ast_nodes.hpp"
+
+#include <assert.h>
+
 #include "../include/parse_error.hpp"
 
 namespace parser {
 
     static void indent(std::ostream& os, int level) {
         for (int i = 0; i < level; ++i) os << "  ";
+    }
+
+    std::string ast_val_type_str(ASTValueType val) {
+        switch (val) {
+            case STRING_LITERAL: return "STRING_LITERAL";
+            case FLOAT: return "FLOAT";
+            case INTEGER: return "INTEGER";
+            case IDENTIFIER: return "IDENTIFIER";
+        }
+    }
+
+    ASTValueType get_var_type_from_node(ASTNode* node) {
+        if (dynamic_cast<StringLiteral*>(node)) {
+            return STRING_LITERAL;
+        }
+
+        if (dynamic_cast<Float*>(node)) {
+            return FLOAT;
+        }
+
+        if (dynamic_cast<Integer*>(node)) {
+            return INTEGER;
+        }
+
+        if (dynamic_cast<Identifier*>(node)) {
+            return IDENTIFIER;
+        }
     }
 
     BuiltInFunc::BuiltInFunc(const std::string& func_name, std::unique_ptr<ASTNode> arg) {
@@ -113,6 +143,30 @@ namespace parser {
         if (value) {
             value->print(os, indent_level + 1);
         }
+    }
+
+    BinaryOp::BinaryOp(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right, BinaryOperator op, ASTValueType left_type, ASTValueType right_type) {
+        this->left = std::move(left);
+        this->right = std::move(right);
+        this->op = op;
+        this->left_type = left_type;
+        this->right_type = right_type;
+    }
+
+    void BinaryOp::print(std::ostream& os, int indent_level) const {
+        indent(os, indent_level);
+        os << "BinaryOp:\n";
+
+        indent(os, indent_level + 1);
+        os << "Operator: " << binary_operator_to_str(op) << "\n";
+
+        indent(os, indent_level + 1);
+        os << "Left Type: " << ast_val_type_str(left_type) << "\n";
+        left->print(os, indent_level + 1);
+
+        indent(os, indent_level + 1);
+        os << "Right Type: " << ast_val_type_str(left_type) << "\n";
+        right->print(os, indent_level + 1);
     }
 
 }

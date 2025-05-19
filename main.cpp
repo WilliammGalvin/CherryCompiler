@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    compiler.remove_temp_c_file();
+    // compiler.remove_temp_c_file();
 
     return 0;
 }

@@ -14,13 +14,16 @@ namespace codegen {
 
     class CGen {
         std::unordered_set<CLibrary> libraries{};
-        std::unordered_map<std::string, Variable> variables{};
+        VariableMap variables{};
+
+        parser::ASTNode* fold_binary_op(parser::BinaryOp* node);
 
         void gen_string_literal(parser::StringLiteral* node, std::ostream& out);
         void gen_float(parser::Float* node, std::ostream& out);
         void gen_integer(parser::Integer* node, std::ostream& out);
         void gen_identifier(parser::Identifier* node, std::ostream& out);
 
+        void gen_primary_value(parser::ASTNode* node, std::ostream& out);
         void gen_value(parser::ASTNode* node, std::ostream& out);
 
         void gen_builtin_func(parser::BuiltInFunc* node, std::ostream& out);

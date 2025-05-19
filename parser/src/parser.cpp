@@ -64,7 +64,11 @@ namespace parser {
         return std::make_unique<Identifier>(name);
     }
 
-    std::unique_ptr<ASTNode> build_value(const std::vector<lexer::Token>& tokens, size_t* index) {
+    std::unique_ptr<ASTNode> build_binary_expr(const std::vector<lexer::Token> &tokens, size_t *index) {
+        //
+    }
+
+    std::unique_ptr<ASTNode> build_primary_value(const std::vector<lexer::Token> &tokens, size_t *index) {
         switch (tokens[*index].type) {
             case lexer::STRING_LITERAL:
                 return build_string_literal(tokens, index);
@@ -73,8 +77,43 @@ namespace parser {
             case lexer::IDENTIFIER:
                 return build_identifier(tokens, index);
             default:
-                throw ParseError("Invalid build value call.");
+                throw ParseError("Invalid build primary value call.");
         }
+    }
+
+    std::unique_ptr<ASTNode> build_value(const std::vector<lexer::Token>& tokens, size_t* index) {
+        auto left = build_primary_value(tokens, index);
+
+        while (*index < tokens.size()) {
+            BinaryOperator op;
+
+            switch (tokens[*index].type) {
+                case lexer::ADD: op = ADD; break;
+                case lexer::SUBTRACT: op = SUBTRACT; break;
+                case lexer::MULTIPLY: op = MULTIPLY; break;
+                case lexer::DIVIDE: op = DIVIDE; break;
+                default: return left;
+            }
+
+            *index += 1;
+            auto right = build_primary_value(tokens, index);
+
+            auto get_val_type = [](ASTNode* node) -> ASTValueType {
+                if (dynamic_cast<Float*>(node)) return FLOAT;
+                if (dynamic_cast<Integer*>(node)) return INTEGER;
+                if (dynamic_cast<StringLiteral*>(node)) return STRING_LITERAL;
+                if (dynamic_cast<Identifier*>(node)) return IDENTIFIER;
+                if (auto bin = dynamic_cast<BinaryOp*>(node)) return bin->left_type;
+                throw ParseError("Cannot determine value type of operand.");
+            };
+
+            ASTValueType left_type = get_val_type(left.get());
+            ASTValueType right_type = get_val_type(right.get());
+
+            left = std::make_unique<BinaryOp>(std::move(left), std::move(right), op, left_type, right_type);
+        }
+
+        return left;
     }
 
     std::unique_ptr<ASTNode> build_imm_declare(const std::vector<lexer::Token>& tokens, size_t* index) {

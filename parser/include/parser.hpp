@@ -14,7 +14,9 @@ namespace parser {
     std::unique_ptr<ASTNode> build_number(const std::vector<lexer::Token>& tokens, size_t* index);
     std::unique_ptr<ASTNode> build_string_literal(const std::vector<lexer::Token>& tokens, size_t* index);
     std::unique_ptr<ASTNode> build_identifier(const std::vector<lexer::Token>& tokens, size_t* index);
+    std::unique_ptr<ASTNode> build_binary_expr(const std::vector<lexer::Token>& tokens, size_t* index);
 
+    std::unique_ptr<ASTNode> build_primary_value(const std::vector<lexer::Token>& tokens, size_t* index);
     std::unique_ptr<ASTNode> build_value(const std::vector<lexer::Token>& tokens, size_t* index);
 
     std::unique_ptr<ASTNode> build_imm_declare(const std::vector<lexer::Token>& tokens, size_t* index);
