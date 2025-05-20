@@ -4,6 +4,7 @@
 
 #ifndef TOKEN_HPP
 #define TOKEN_HPP
+
 #include <string>
 
 namespace lexer {
@@ -30,9 +31,9 @@ namespace lexer {
 
         Token(TokenType type, const std::string& value);
 
-        Token(TokenType type);
+        explicit Token(TokenType type);
 
-        std::string to_str() const;
+        [[nodiscard]] std::string to_str() const;
     };
 
 }

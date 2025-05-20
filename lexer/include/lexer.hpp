@@ -4,6 +4,7 @@
 
 #ifndef LEXER_HPP
 #define LEXER_HPP
+
 #include <string>
 #include <vector>
 
@@ -30,7 +31,7 @@ namespace lexer {
         void lex_line(std::vector<Token>& tokens);
 
     public:
-        Lexer(const std::string& file_name);
+        explicit Lexer(const std::string& file_name);
 
         std::vector<Token> lex_file();
     };

@@ -10,13 +10,13 @@
 
 namespace parser {
 
-    class ParseError : public std::exception {
+    class ParseError final : public std::exception {
         std::string message;
 
         mutable std::string formatted_msg;
 
     public:
-        ParseError(const std::string& msg);
+        explicit ParseError(const std::string& msg);
 
         const char* what() const noexcept override;
     };

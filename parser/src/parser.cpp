@@ -2,23 +2,29 @@
 // Created by Willam Galvin on 2025-05-17.
 //
 
-#include "../include/parser.hpp"
-
 #include <cassert>
 #include <regex>
 #include <unordered_set>
 
+#include "../include/parser.hpp"
 #include "../include/parse_error.hpp"
 
 namespace parser {
 
-    std::unique_ptr<ASTNode> build_number(const std::vector<lexer::Token>& tokens, size_t* index) {
-        assert(tokens[*index].type == lexer::NUMBER);
+    std::unique_ptr<ASTNode> build_number(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
+        assert(
+            tokens[*index].type == lexer::NUMBER &&
+            "Number expectes token type NUMBER."
+        );
 
         std::smatch match;
         const std::regex reg(R"([0-9]+\.[0-9]+)");
         const std::string& value_str = tokens[*index].value;
 
+        // Match against tokens with Float values
         if (std::regex_match(tokens[*index].value, match, reg)) {
             float val;
 
@@ -34,6 +40,7 @@ namespace parser {
             return std::make_unique<Float>(val);
         }
 
+        // Otherwise default to Integer
         int val;
 
         try {
@@ -48,27 +55,47 @@ namespace parser {
         return std::make_unique<Integer>(val);
     }
 
-    std::unique_ptr<ASTNode> build_string_literal(const std::vector<lexer::Token>& tokens, size_t* index) {
-        assert(tokens[*index].type == lexer::STRING_LITERAL);
+    std::unique_ptr<ASTNode> build_string_literal(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
+        assert(
+            tokens[*index].type == lexer::STRING_LITERAL &&
+            "StringLiteral expectes token type STRING_LITERAL."
+        );
+
         const std::string& val = tokens[*index].value;
         *index += 1;
 
         return std::make_unique<StringLiteral>(val);
     }
 
-    std::unique_ptr<ASTNode> build_identifier(const std::vector<lexer::Token>& tokens, size_t* index) {
-        assert(tokens[*index].type == lexer::IDENTIFIER);
+    std::unique_ptr<ASTNode> build_identifier(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
+        assert(
+            tokens[*index].type == lexer::IDENTIFIER &&
+            "Identifier expectes token type IDENTIFIER."
+        );
+
         const std::string& name = tokens[*index].value;
         *index += 1;
 
         return std::make_unique<Identifier>(name);
     }
 
-    std::unique_ptr<ASTNode> build_binary_expr(const std::vector<lexer::Token> &tokens, size_t *index) {
+    std::unique_ptr<ASTNode> build_binary_expr(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
         //
     }
 
-    std::unique_ptr<ASTNode> build_primary_value(const std::vector<lexer::Token> &tokens, size_t *index) {
+    std::unique_ptr<ASTNode> build_primary_value(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
         switch (tokens[*index].type) {
             case lexer::STRING_LITERAL:
                 return build_string_literal(tokens, index);
@@ -81,7 +108,10 @@ namespace parser {
         }
     }
 
-    std::unique_ptr<ASTNode> build_value(const std::vector<lexer::Token>& tokens, size_t* index) {
+    std::unique_ptr<ASTNode> build_value(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
         auto left = build_primary_value(tokens, index);
 
         while (*index < tokens.size()) {
@@ -116,8 +146,16 @@ namespace parser {
         return left;
     }
 
-    std::unique_ptr<ASTNode> build_imm_declare(const std::vector<lexer::Token>& tokens, size_t* index) {
-        assert(tokens[*index].type == lexer::KEYWORD && tokens[*index].value == "dec");
+    std::unique_ptr<ASTNode> build_imm_declare(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
+        assert(
+            tokens[*index].type == lexer::KEYWORD &&
+            tokens[*index].value == "dec" &&
+            "ImmDeclare expects token type KEYWORD with value 'dec'."
+        );
+
         *index += 1;
 
         if (tokens[*index].type != lexer::IDENTIFIER) {
@@ -135,8 +173,16 @@ namespace parser {
         return std::make_unique<ImmDeclare>(std::move(identifier), std::move(value));
     }
 
-    std::unique_ptr<ASTNode> build_mut_declare(const std::vector<lexer::Token>& tokens, size_t* index) {
-        assert(tokens[*index].type == lexer::KEYWORD && tokens[*index].value == "decm");
+    std::unique_ptr<ASTNode> build_mut_declare(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
+        assert(
+            tokens[*index].type == lexer::KEYWORD &&
+            tokens[*index].value == "decm" &&
+            "MutDeclare expects token type KEYWORD with value 'decm'."
+        );
+
         *index += 1;
 
         if (tokens[*index].type != lexer::IDENTIFIER) {
@@ -154,7 +200,10 @@ namespace parser {
         return std::make_unique<MutDeclare>(std::move(identifier), std::move(value));
     }
 
-    std::unique_ptr<ASTNode> build_assign_var(const std::vector<lexer::Token>& tokens, size_t* index) {
+    std::unique_ptr<ASTNode> build_assign_var(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
         auto identifier = build_identifier(tokens, index);
 
         if (tokens[*index].type != lexer::EQUALS) {
@@ -166,7 +215,10 @@ namespace parser {
         return std::make_unique<AssignVar>(std::move(identifier), std::move(value));
     }
 
-    std::unique_ptr<ASTNode> build_builtin_func_call(const std::vector<lexer::Token>& tokens, size_t* index) {
+    std::unique_ptr<ASTNode> build_builtin_func_call(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
         assert(tokens[*index].type == lexer::BUILTIN_FUNC);
         const std::unordered_set<std::string> builtin_func_names = {
             "print", "println"
@@ -182,7 +234,10 @@ namespace parser {
         return std::make_unique<BuiltInFunc>(func_name, std::move(value));
     }
 
-    std::unique_ptr<ASTNode> build_statement(const std::vector<lexer::Token>& tokens, size_t* index) {
+    std::unique_ptr<ASTNode> build_statement(
+        const std::vector<lexer::Token>& tokens,
+        size_t* index
+    ) {
         const lexer::Token& token = tokens[*index];
 
         if (token.type == lexer::KEYWORD) {
@@ -208,7 +263,9 @@ namespace parser {
         throw ParseError("Unrecognized statement type at beginning of line.");
     }
 
-    std::vector<std::unique_ptr<ASTNode>> build_program(const std::vector<lexer::Token>& tokens) {
+    std::vector<std::unique_ptr<ASTNode>> build_program(
+        const std::vector<lexer::Token>& tokens
+    ) {
         std::vector<std::unique_ptr<ASTNode>> asts{};
         size_t index = 0;
 

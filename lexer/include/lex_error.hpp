@@ -4,12 +4,13 @@
 
 #ifndef LEXERROR_HPP
 #define LEXERROR_HPP
+
 #include <exception>
 #include <string>
 
 namespace lexer {
 
-    class LexError : public std::exception {
+    class LexError final : public std::exception {
         std::string message;
         int line;
         int column;

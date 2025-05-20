@@ -2,19 +2,18 @@
 // Created by Willam Galvin on 2025-05-17.
 //
 
-#include "../include/token.hpp"
+#include <cassert>
 
-#include <assert.h>
-#include <iostream>
+#include "../include/token.hpp"
 
 namespace lexer {
 
-    Token::Token(TokenType type, const std::string &value) {
+    Token::Token(const TokenType type, const std::string &value) {
         this->type = type;
         this->value = value;
     }
 
-    Token::Token(TokenType type) {
+    Token::Token(const TokenType type) {
         this->type = type;
         this->value = {};
     }

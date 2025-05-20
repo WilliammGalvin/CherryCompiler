@@ -4,6 +4,7 @@
 
 #ifndef AST_NODES_HPP
 #define AST_NODES_HPP
+
 #include <memory>
 #include <string>
 #include <ostream>
@@ -28,7 +29,7 @@ namespace parser {
 
     ASTValueType get_var_type_from_node(ASTNode* node);
 
-    struct BuiltInFunc : ASTNode {
+    struct BuiltInFunc final : ASTNode {
         std::string func_name;
         std::unique_ptr<ASTNode> arg;
 
@@ -36,35 +37,35 @@ namespace parser {
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct StringLiteral : ASTNode {
+    struct StringLiteral final : ASTNode {
         std::string content;
 
-        StringLiteral(const std::string& content);
+        explicit StringLiteral(const std::string& content);
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct Integer : ASTNode {
+    struct Integer final : ASTNode {
         int value;
 
-        Integer(int value);
+        explicit Integer(int value);
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct Float : ASTNode {
+    struct Float final : ASTNode {
         float value;
 
-        Float(float value);
+        explicit Float(float value);
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct Identifier : ASTNode {
+    struct Identifier final : ASTNode {
         std::string name;
 
-        Identifier(const std::string& name);
+        explicit Identifier(const std::string& name);
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct ImmDeclare : ASTNode {
+    struct ImmDeclare final : ASTNode {
         std::unique_ptr<ASTNode> identifier;
         std::unique_ptr<ASTNode> value;
 
@@ -72,7 +73,7 @@ namespace parser {
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct MutDeclare : ASTNode {
+    struct MutDeclare final : ASTNode {
         std::unique_ptr<ASTNode> identifier;
         std::unique_ptr<ASTNode> value;
 
@@ -80,7 +81,7 @@ namespace parser {
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct AssignVar : ASTNode {
+    struct AssignVar final : ASTNode {
         std::unique_ptr<ASTNode> identifier;
         std::unique_ptr<ASTNode> value;
 
@@ -88,14 +89,16 @@ namespace parser {
         void print(std::ostream& os, int indent_level) const override;
     };
 
-    struct BinaryOp : ASTNode {
+    struct BinaryOp final : ASTNode {
         std::unique_ptr<ASTNode> left;
         std::unique_ptr<ASTNode> right;
         BinaryOperator op;
         ASTValueType left_type;
         ASTValueType right_type;
 
-        BinaryOp(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right, BinaryOperator op, ASTValueType left_type, ASTValueType right_type);
+        BinaryOp(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right,
+            BinaryOperator op, ASTValueType left_type, ASTValueType right_type);
+
         void print(std::ostream& os, int indent_level) const override;
     };
 
