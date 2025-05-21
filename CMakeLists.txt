@@ -31,4 +31,6 @@ add_executable(CherryCompiler main.cpp
         parser/src/operators.cpp
         codegen/include/evaluator.hpp
         codegen/src/evaluator.cpp
+        parser/include/defined_functions.hpp
+        parser/src/defined_functions.cpp
 )

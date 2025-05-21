@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #ifndef C_GEN_HPP
 #define C_GEN_HPP
 #include "../../parser/include/ast_nodes.hpp"

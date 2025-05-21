@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-18.
-//
-
 #include "../include/compiler_error.hpp"
 
 namespace compiler {

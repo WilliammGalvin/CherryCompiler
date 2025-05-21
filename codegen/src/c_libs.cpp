@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #include <cassert>
 
 #include "../include/c_gen.hpp"

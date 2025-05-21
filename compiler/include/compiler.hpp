@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-18.
-//
-
 #ifndef COMPILER_HPP
 #define COMPILER_HPP
 

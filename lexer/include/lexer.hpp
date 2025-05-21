@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #ifndef LEXER_HPP
 #define LEXER_HPP
 
@@ -18,7 +14,7 @@ namespace lexer {
         int line;
         int index;
 
-        char peek();
+        char peek() const;
         char consume();
 
         bool match_symbol(std::vector<Token>& tokens);

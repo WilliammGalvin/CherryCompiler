@@ -1,9 +1,6 @@
-//
-// Created by Willam Galvin on 2025-05-18.
-//
-
 #ifndef COMPILER_ERROR_HPP
 #define COMPILER_ERROR_HPP
+
 #include <exception>
 #include <string>
 

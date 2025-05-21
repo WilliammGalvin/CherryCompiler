@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #ifndef AST_NODES_HPP
 #define AST_NODES_HPP
 
@@ -13,16 +9,22 @@
 
 namespace parser {
 
-    struct ASTNode {
-        virtual ~ASTNode() = default;
-        virtual void print(std::ostream& os, int indent) const = 0;
-    };
-
     enum ASTValueType {
         STRING_LITERAL,
         FLOAT,
         INTEGER,
-        IDENTIFIER
+        IDENTIFIER,
+        BUILTIN_FUNC,
+        IMM_DECLARE,
+        MUT_DECLARE,
+        ASSIGN_VAR,
+        BINARY_OP,
+    };
+
+    struct ASTNode {
+        ASTValueType type;
+        virtual ~ASTNode() = default;
+        virtual void print(std::ostream& os, int indent) const = 0;
     };
 
     std::string ast_val_type_str(ASTValueType val);
@@ -93,11 +95,8 @@ namespace parser {
         std::unique_ptr<ASTNode> left;
         std::unique_ptr<ASTNode> right;
         BinaryOperator op;
-        ASTValueType left_type;
-        ASTValueType right_type;
 
-        BinaryOp(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right,
-            BinaryOperator op, ASTValueType left_type, ASTValueType right_type);
+        BinaryOp(std::unique_ptr<ASTNode> left, std::unique_ptr<ASTNode> right, BinaryOperator op);
 
         void print(std::ostream& os, int indent_level) const override;
     };

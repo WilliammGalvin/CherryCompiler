@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #ifndef CODE_GEN_ERROR_HPP
 #define CODE_GEN_ERROR_HPP
 #include <exception>

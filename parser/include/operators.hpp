@@ -1,11 +1,9 @@
-//
-// Created by Willam Galvin on 2025-05-18.
-//
-
 #ifndef OPERATORS_HPP
 #define OPERATORS_HPP
 
 #include <string>
+
+#include "../../lexer/include/token.hpp"
 
 namespace parser {
 
@@ -15,6 +13,8 @@ namespace parser {
         MULTIPLY,
         DIVIDE
     };
+
+    bool is_binary_op(lexer::TokenType type);
 
     std::string binary_operator_to_str(BinaryOperator op);
 

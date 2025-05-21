@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
@@ -37,9 +38,11 @@ int main(int argc, char* argv[]) {
         std::cout << token.to_str() << std::endl;
     }
 
+    return 0;
     std::cout << "~~~~~~" << std::endl;
 
-    auto asts = parser::build_program(tokens);
+    parser::Parser parser(tokens);
+    auto asts = parser.build_program();
 
     for (const auto& ast : asts) {
         ast->print(std::cout, 0);
@@ -47,10 +50,11 @@ int main(int argc, char* argv[]) {
 
     std::cout << "~~~~~~" << std::endl;
 
-    codegen::CGen gen;
-
     try {
+        codegen::CGen gen;
+        std::filesystem::create_directories("output/");
         std::ofstream file("output/test.c");
+
         if (!file.is_open()) {
             std::cerr << "Failed to open output file." << std::endl;
             return 1;

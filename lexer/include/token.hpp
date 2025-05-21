@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #ifndef TOKEN_HPP
 #define TOKEN_HPP
 
@@ -13,7 +9,8 @@ namespace lexer {
         BUILTIN_FUNC,
         LINE_END,
         STRING_LITERAL,
-        NUMBER,
+        FLOAT,
+        INTEGER,
         ADD,
         SUBTRACT,
         MULTIPLY,

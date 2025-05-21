@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #ifndef PARSER_HPP
 #define PARSER_HPP
 
@@ -12,22 +8,35 @@
 
 namespace parser {
 
-    std::unique_ptr<ASTNode> build_number(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_string_literal(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_identifier(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_binary_expr(const std::vector<lexer::Token>& tokens, size_t* index);
+    class Parser {
+        const std::vector<lexer::Token>& tokens;
+        size_t index;
 
-    std::unique_ptr<ASTNode> build_primary_value(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_value(const std::vector<lexer::Token>& tokens, size_t* index);
+        [[nodiscard]] const lexer::Token& peek() const;
+        [[nodiscard]] const lexer::Token& backPeek() const;
+        [[nodiscard]] bool is_at_end() const;
+        [[nodiscard]] const lexer::Token& consume();
+        void advance();
+        [[nodiscard]] bool check(lexer::TokenType type) const;
+        [[nodiscard]] const lexer::Token& expect(lexer::TokenType type, const std::string& err_msg);
+        void expect_symbol(lexer::TokenType type, const std::string& err_msg);
 
-    std::unique_ptr<ASTNode> build_imm_declare(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_mut_declare(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_assign_var(const std::vector<lexer::Token>& tokens, size_t* index);
-    std::unique_ptr<ASTNode> build_builtin_func_call(const std::vector<lexer::Token>& tokens, size_t* index);
+        std::unique_ptr<ASTNode> build_factor();
+        std::unique_ptr<ASTNode> build_term();
+        std::unique_ptr<ASTNode> build_expr();
 
-    std::unique_ptr<ASTNode> build_statement(const std::vector<lexer::Token>& tokens, size_t* index);
+        std::unique_ptr<ASTNode> build_imm_declare();
+        std::unique_ptr<ASTNode> build_mut_declare();
+        std::unique_ptr<ASTNode> build_assign_var();
+        std::unique_ptr<ASTNode> build_builtin_func_call();
 
-    std::vector<std::unique_ptr<ASTNode>> build_program(const std::vector<lexer::Token>& tokens);
+        std::unique_ptr<ASTNode> build_statement();
+
+    public:
+        explicit Parser(const std::vector<lexer::Token>& tokens);
+
+        std::vector<std::unique_ptr<ASTNode>> build_program();
+    };
 
 }
 

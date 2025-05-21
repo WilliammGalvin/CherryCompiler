@@ -1,13 +1,8 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
-#include "../include/lexer.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <regex>
 
+#include "../include/lexer.hpp"
 #include "../include/lex_error.hpp"
 
 namespace lexer {
@@ -19,7 +14,7 @@ namespace lexer {
         this->index = 0;
     }
 
-    char Lexer::peek() {
+    char Lexer::peek() const {
         if (current_source.empty()) {
             return '\0';
         }
@@ -35,6 +30,7 @@ namespace lexer {
         const char c = current_source[0];
         current_source = current_source.substr(1);
         index++;
+
         return c;
     }
 
@@ -74,7 +70,7 @@ namespace lexer {
 
             tokens.emplace_back(
                 BUILTIN_FUNC,
-                m_str.substr(0, m_str.length() - 1)
+                m_str.substr(m_str.length())
             );
 
             index += static_cast<int>(m_str.length());
@@ -166,10 +162,11 @@ namespace lexer {
         ) {
             const std::string m_str = match.str(0);
 
-            tokens.emplace_back(
-                NUMBER,
-                m_str.substr(0, m_str.length())
-            );
+            if (m_str.find('.') != std::string::npos) {
+                tokens.emplace_back(FLOAT, m_str);
+            } else {
+                tokens.emplace_back(INTEGER, m_str);
+            }
 
             index += static_cast<int>(m_str.length());
             current_source = current_source.substr(m_str.length());

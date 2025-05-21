@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
 #include <cassert>
 
 #include "../include/token.hpp"
@@ -24,7 +20,8 @@ namespace lexer {
         switch (type) {
             case BUILTIN_FUNC: str = "BUILTIN_FUNC"; break;
             case STRING_LITERAL: str = "STRING_LITERAL"; break;
-            case NUMBER: str = "NUMBER"; break;
+            case FLOAT: str = "FLOAT"; break;
+            case INTEGER: str = "INTEGER"; break;
             case LINE_END: str = "LINE_END"; break;
             case ADD: str = "ADD"; break;
             case SUBTRACT: str = "SUBTRACT"; break;

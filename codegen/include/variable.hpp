@@ -1,7 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-18.
-//
-
 #ifndef VARIABLE_HPP
 #define VARIABLE_HPP
 #include <unordered_map>

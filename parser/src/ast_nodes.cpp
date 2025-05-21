@@ -1,9 +1,3 @@
-//
-// Created by Willam Galvin on 2025-05-17.
-//
-
-#include <cassert>
-
 #include "../include/ast_nodes.hpp"
 #include "../include/parse_error.hpp"
 
@@ -19,39 +13,20 @@ namespace parser {
             case FLOAT: return "FLOAT";
             case INTEGER: return "INTEGER";
             case IDENTIFIER: return "IDENTIFIER";
+            case BUILTIN_FUNC: return "BUILTIN_FUNC";
+            case IMM_DECLARE: return "IMM_DECLARE";
+            case ASSIGN_VAR: return "ASSIGN_VAR";
+            case BINARY_OP: return "BINARY_OP";
+            default: {
+                throw ParseError("Couldn't map ASTValueType enum to str.");
+            };
         }
-
-        assert(false && "Cannot identify string for ASTValueType.");
-        return "";
     }
 
-    ASTValueType get_var_type_from_node(ASTNode* node) {
-        if (dynamic_cast<StringLiteral*>(node)) {
-            return STRING_LITERAL;
-        }
-
-        if (dynamic_cast<Float*>(node)) {
-            return FLOAT;
-        }
-
-        if (dynamic_cast<Integer*>(node)) {
-            return INTEGER;
-        }
-
-        if (dynamic_cast<Identifier*>(node)) {
-            return IDENTIFIER;
-        }
-
-        assert(false && "Cannot determine var type from ASTNode.");
-        return INTEGER;
-    }
-
-    BuiltInFunc::BuiltInFunc(
-        const std::string& func_name,
-        std::unique_ptr<ASTNode> arg
-        ) {
+    BuiltInFunc::BuiltInFunc(const std::string& func_name, std::unique_ptr<ASTNode> arg) {
         this->func_name = func_name;
         this->arg = std::move(arg);
+        this->type = BUILTIN_FUNC;
     }
 
     void BuiltInFunc::print(std::ostream& os, const int indent_level) const {
@@ -68,6 +43,7 @@ namespace parser {
 
     StringLiteral::StringLiteral(const std::string& content) {
         this->content = content;
+        this->type = STRING_LITERAL;
     }
 
     void StringLiteral::print(std::ostream& os, const int indent_level) const {
@@ -77,6 +53,7 @@ namespace parser {
 
     Integer::Integer(const int value) {
         this->value = value;
+        this->type = INTEGER;
     }
 
     void Integer::print(std::ostream& os, const int indent_level) const {
@@ -86,6 +63,7 @@ namespace parser {
 
     Float::Float(const float value) {
         this->value = value;
+        this->type = FLOAT;
     }
 
     void Float::print(std::ostream& os, const int indent_level) const {
@@ -95,6 +73,7 @@ namespace parser {
 
     Identifier::Identifier(const std::string& name) {
         this->name = name;
+        this->type = IDENTIFIER;
     }
 
     void Identifier::print(std::ostream& os, const int indent_level) const {
@@ -102,12 +81,10 @@ namespace parser {
         os << "Identifier: " << name << "\n";
     }
 
-    ImmDeclare::ImmDeclare(
-        std::unique_ptr<ASTNode> identifier,
-        std::unique_ptr<ASTNode> value
-    ) {
+    ImmDeclare::ImmDeclare(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value) {
         this->identifier = std::move(identifier);
         this->value = std::move(value);
+        this->type = IMM_DECLARE;
     }
 
     void ImmDeclare::print(std::ostream& os, const int indent_level) const {
@@ -129,12 +106,10 @@ namespace parser {
         }
     }
 
-    MutDeclare::MutDeclare(
-        std::unique_ptr<ASTNode> identifier,
-        std::unique_ptr<ASTNode> value
-    ) {
+    MutDeclare::MutDeclare(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value) {
         this->identifier = std::move(identifier);
         this->value = std::move(value);
+        this->type = MUT_DECLARE;
     }
 
     void MutDeclare::print(std::ostream& os, const int indent_level) const {
@@ -156,12 +131,10 @@ namespace parser {
         }
     }
 
-    AssignVar::AssignVar(
-        std::unique_ptr<ASTNode> identifier,
-        std::unique_ptr<ASTNode> value
-    ) {
+    AssignVar::AssignVar(std::unique_ptr<ASTNode> identifier, std::unique_ptr<ASTNode> value) {
         this->identifier = std::move(identifier);
         this->value = std::move(value);
+        this->type = ASSIGN_VAR;
     }
 
     void AssignVar::print(std::ostream& os, const int indent_level) const {
@@ -186,15 +159,12 @@ namespace parser {
     BinaryOp::BinaryOp(
         std::unique_ptr<ASTNode> left,
         std::unique_ptr<ASTNode> right,
-        const BinaryOperator op,
-        const ASTValueType left_type,
-        const ASTValueType right_type
+        const BinaryOperator op
     ) {
         this->left = std::move(left);
         this->right = std::move(right);
         this->op = op;
-        this->left_type = left_type;
-        this->right_type = right_type;
+        this->type = BINARY_OP;
     }
 
     void BinaryOp::print(std::ostream& os, const int indent_level) const {
@@ -209,23 +179,13 @@ namespace parser {
             os << "Operator is null\n";
         }
 
-        if (left_type) {
-            indent(os, indent_level + 1);
-            os << "Left Type: " << ast_val_type_str(left_type) << "\n";
-            left->print(os, indent_level + 1);
-        } else {
-            indent(os, indent_level + 1);
-            os << "Left type is null\n";
-        }
+        indent(os, indent_level + 1);
+        os << "Left Type: " << ast_val_type_str(left->type) << "\n";
+        left->print(os, indent_level + 1);
 
-        if (right_type) {
-            indent(os, indent_level + 1);
-            os << "Right Type: " << ast_val_type_str(right_type) << "\n";
-            right->print(os, indent_level + 1);
-        } else {
-            indent(os, indent_level + 1);
-            os << "Right type is null\n";
-        }
+        indent(os, indent_level + 1);
+        os << "Right Type: " << ast_val_type_str(left->type) << "\n";
+        right->print(os, indent_level + 1);
     }
 
 }

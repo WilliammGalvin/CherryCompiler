@@ -1,12 +1,21 @@
-//
-// Created by Willam Galvin on 2025-05-18.
-//
-
 #include <cassert>
 
 #include "../include/operators.hpp"
 
 namespace parser {
+
+    bool is_binary_op(const lexer::TokenType type) {
+        switch (type) {
+            case lexer::ADD:
+            case lexer::SUBTRACT:
+            case lexer::MULTIPLY:
+            case lexer::DIVIDE:
+                return true;
+
+            default:
+                return false;
+        }
+    }
 
     std::string binary_operator_to_str(const BinaryOperator op) {
         switch (op) {
